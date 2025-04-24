@@ -1,4 +1,4 @@
-name: On-demand build on Windows
+name: On-demand build
 
 on:
   workflow_dispatch:
