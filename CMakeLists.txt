@@ -11,8 +11,8 @@ set(SOURCES
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
-    add_executable(RunPsScript ${SOURCES})
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
+    add_executable(RunPsScript WIN32 ${SOURCES})
 else()
     #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")  # For /MT
     add_executable(RunPsScript WIN32 ${SOURCES})
