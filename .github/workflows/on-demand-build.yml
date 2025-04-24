@@ -19,5 +19,5 @@ jobs:
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: csdhr_on_demand_build_executable
+        name: RunPsScript_on_demand_build_executable
         path: ${{ github.workspace }}/build/MSVC/Release/
