@@ -26,7 +26,7 @@ std::string GetLastErrorAsString() {
 }
 */
 
-void executeCommand(const char* command) {
+/*void executeCommand(const char* command) {
     SECURITY_ATTRIBUTES sa;
     sa.nLength = sizeof(SECURITY_ATTRIBUTES);
     sa.bInheritHandle = TRUE;
@@ -77,7 +77,7 @@ void executeCommand(const char* command) {
     //res.output = output;
     //res.exitcode = exitCode;
     return;
-}
+}*/
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -89,10 +89,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     char* argv = new char[sizeNeeded];
     WideCharToMultiByte(CP_ACP, 0, argvW[1], -1, argv, sizeNeeded, NULL, NULL);
     
-    STARTUPINFOA si = { sizeof(si) };
-    PROCESS_INFORMATION pi;
-    DWORD flags = CREATE_NO_WINDOW;
-    
     if (argc < 2){
         return 1;
     }
@@ -101,7 +97,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     const char* command = command_str.c_str();
     
     //system(("msg * powershell.exe "+std::string(argv)).c_str());
-    executeCommand(command);
+    //executeCommand(command);
+    
+    STARTUPINFOA si = { sizeof(si) };
+    PROCESS_INFORMATION pi;
+    if (CreateProcessA(
+        NULL,               // No module name
+        (LPSTR)command,     // Command line
+        NULL, NULL,         // Process and thread security attributes
+        FALSE,              // No inheritance
+        CREATE_NO_WINDOW,   // Create flags
+        NULL,               // Use parent's environment
+        NULL,               // Use parent's starting directory
+        &si, &pi)
+    ) {
+        // Wait for it to complete
+        WaitForSingleObject(pi.hProcess, INFINITE);
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    } else {
+        //std::string dwError = GetLastErrorAsString();
+        std::string errComm = "msg * Error creating process";//dwError
+        system(errComm.c_str());
+        delete[] argv;
+        return 2;
+    }
 
     delete[] argv;
 
